@@ -1,9 +1,13 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import GUI from "lil-gui"
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js"
 
 /**
  * Base
  */
+
+const gui = new GUI()
 
 //Loading Manager
 const loadingManager = new THREE.LoadingManager()
@@ -30,16 +34,16 @@ const textureLoader = new THREE.TextureLoader(loadingManager);
 //Textures
 
 //Door
-const colorTexture = textureLoader.load("/textures/door/color.jpg",);
+const doorColorTexture = textureLoader.load("/textures/door/color.jpg",);
 const alphaTexture = textureLoader.load("/textures/door/alpha.jpg",);
 const heightTexture = textureLoader.load("/textures/door/height.jpg",);
-const normalTexture = textureLoader.load("/textures/door/normal.jpg",);
-const ambientOclussionTexture = textureLoader.load("/textures/door/ambientOcclusion.jpg",);
+const doorNormalTexture = textureLoader.load("/textures/door/normal.jpg",);
+const doorAmbientOcclusionTexture = textureLoader.load("/textures/door/ambientOcclusion.jpg",);
 const metalnessTexture = textureLoader.load("/textures/door/metalness.jpg",);
-const roughnessTexture = textureLoader.load("/textures/door/roughness.jpg",);
+const doorRoughnessTexture = textureLoader.load("/textures/door/roughness.jpg",);
 
 //Gradient
-const gradiente = textureLoader.load("/textures/door/gradients/3jpg",);
+const gradiente = textureLoader.load("/textures/door/gradients/3.jpg");
 
 
 //Maccap
@@ -56,24 +60,37 @@ const scene = new THREE.Scene()
 
 //MeshBasicMaterial
 
-const material = new THREE.MeshPhongMaterial()
+const material = new THREE.MeshStandardMaterial()
+material.metalness = 0.7
+material.roughness = 0.2
+material.map = doorColorTexture
+material.aoMap = doorAmbientOcclusionTexture
+material.aoMapIntensity = 1
+material.displacementMap = doorAmbientOcclusionTexture
+material.displacementScale = 0.1
+material.metalnessMap = doorColorTexture
+material.roughnessMap = doorRoughnessTexture
+material.normalMap = doorNormalTexture
 
+
+gui.add(material, "metalness").min(0).max(1).step(0.0001)
+gui.add(material, "roughness").min(0).max(1).step(0.0001)
 
 const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(0.5, 16, 16),
+    new THREE.SphereGeometry(0.5, 64, 64),
     material
 )
 sphere.position.x = -1.5
 
 
 const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(1,1),
+    new THREE.PlaneGeometry(1,1, 100, 100),
     material
 )
 
 
 const torus = new THREE.Mesh(
-    new THREE.TorusGeometry(0.3, 0.2, 16, 32),
+    new THREE.TorusGeometry(0.3, 0.2, 64, 128),
     material
 )
 torus.position.x = 1.5
@@ -82,14 +99,26 @@ torus.position.x = 1.5
 scene.add(sphere, plane, torus)
 
 //Ligths
-const ambientLight = new THREE.AmbientLight(0xffffff, 1)
-scene.add(ambientLight)
+// const ambientLight = new THREE.AmbientLight(0xffffff, 1)
+// scene.add(ambientLight)
 
-const pointLight = new THREE.PointLight(0xffffff, 30)
-pointLight.position.x = 2
-pointLight.position.y = 3
-pointLight.position.z = 4
-scene.add(pointLight)
+// const pointLight = new THREE.PointLight(0xffffff, 30)
+// pointLight.position.x = 2
+// pointLight.position.y = 3
+// pointLight.position.z = 4
+// scene.add(pointLight)
+
+const rgbeLoader = new RGBELoader()
+rgbeLoader.load("./textures/environmentMap/2k.hdr", (environmentMap) => {
+    environmentMap.mapping = THREE.EquirectangularReflectionMapping
+    
+    scene.background = environmentMap
+    scene.environment = environmentMap
+});
+
+
+
+
 /**
  * Sizes
  */
