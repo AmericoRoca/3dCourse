@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "lil-gui": "^0.20.0"
+    "lil-gui": "^0.20.0",
+    "vercel": "^41.4.1"
   }
 }
