@@ -15,6 +15,141 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+//Texture
+const textureLoader = new THREE.TextureLoader()
+
+//Floor
+const floorAlphaTexture = textureLoader.load("./floor/alpha.jpg")
+const floorColorTexture = textureLoader.load("./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_diff_1k.jpg")
+const floorARMTexture = textureLoader.load("./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_arm_1k.jpg")
+const floorNormalTexture = textureLoader.load("./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_nor_gl_1k.jpg")
+const floorDispTexture = textureLoader.load("./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_disp_1k.jpg")
+
+
+floorColorTexture.colorSpace = THREE.SRGBColorSpace //aLWAYS DO IT WITH COLOR TEXTURES
+
+floorColorTexture.repeat.set(8,8)
+floorARMTexture.repeat.set(8,8)
+floorNormalTexture.repeat.set(8,8)
+floorDispTexture.repeat.set(8,8)
+
+floorColorTexture.wrapS = THREE.RepeatWrapping
+floorColorTexture.wrapT = THREE.RepeatWrapping
+
+floorARMTexture.wrapS = THREE.RepeatWrapping
+floorARMTexture.wrapT = THREE.RepeatWrapping
+
+
+floorNormalTexture.wrapS = THREE.RepeatWrapping
+floorNormalTexture.wrapT = THREE.RepeatWrapping
+
+floorDispTexture.wrapS = THREE.RepeatWrapping
+floorDispTexture.wrapT = THREE.RepeatWrapping
+
+
+const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry (20, 20, 100, 100),
+    new THREE.MeshStandardMaterial({
+        alphaMap: floorAlphaTexture,
+        transparent: true,
+        map: floorColorTexture,
+        aoMap: floorARMTexture,
+        roughnessMap: floorARMTexture,
+        metalnessMap: floorARMTexture,
+        normalMap: floorNormalTexture,
+        displacementMap: floorDispTexture,
+        displacementScale: 0.3, 
+        displacementBias: - 0.2
+    })
+)
+floor.rotation.x = - Math.PI * 0.5
+
+scene.add(floor)
+
+gui.add(floor.material, 'displacementScale').min(0).max(1).step(0.01).name("floor displacemente")
+gui.add(floor.material, 'displacementBias').min(0).max(1).step(0.01).name("bias displacemente")
+
+//Wall 
+const wallColorTexture = textureLoader.load("./wall/castle_brick_broken_06_1k/castle_brick_broken_06_diff_1k.jpg")
+const wallARMTexture = textureLoader.load("./wall/castle_brick_broken_06_1k/castle_brick_broken_06_arm_1k.jpg")
+const wallNormalTexture = textureLoader.load("./wall/castle_brick_broken_06_1k/cocastle_brick_broken_06_nor_gl_1k.jpg")
+
+wallColorTexture.colorSpace = THREE.SRGBColorSpace
+
+//roof 
+const roofColorTexture = textureLoader.load("./roof/roof_slates_02_1k/roof_slates_02_diff_1k.jpg")
+const roofARMTexture = textureLoader.load("./roof/roof_slates_02_1k/roof_slates_02_arm_1k.jpg")
+const roofNormalTexture = textureLoader.load("./roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.jpg")
+
+roofColorTexture.colorSpace = THREE.SRGBColorSpace
+
+roofColorTexture.repeat.set(3,1)
+roofARMTexture.repeat.set(3,1)
+roofNormalTexture.repeat.set(3,1)
+
+roofColorTexture.wrapS = THREE.RepeatWrapping
+roofARMTexture.wrapS = THREE.RepeatWrapping
+roofNormalTexture.wrapS = THREE.RepeatWrapping
+
+//Bush 
+const bushColorTexture = textureLoader.load("./bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.jpg")
+const bushARMTexture = textureLoader.load("./bush/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.jpg")
+const bushNormalTexture = textureLoader.load("./bush/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.jpg")
+
+bushColorTexture.colorSpace = THREE.SRGBColorSpace
+
+bushColorTexture.repeat.set(2,1)
+bushARMTexture.repeat.set(2,1)
+bushNormalTexture.repeat.set(2,1)
+
+bushColorTexture.wrapS = THREE.RepeatWrapping
+bushARMTexture.wrapS = THREE.RepeatWrapping
+bushNormalTexture.wrapS = THREE.RepeatWrapping
+
+
+//Graves
+const gravesColorTexture = textureLoader.load("./grave/plastered_stone_wall_1k/plastered_stone_wall_diff_1k.jpg")
+const gravesARMTexture = textureLoader.load("./grave/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.jpg")
+const gravesNormalTexture = textureLoader.load("./grave/plastered_stone_wall_1k/plastered_stone_wall_nor_gl_1k.jpg")
+
+gravesColorTexture.colorSpace = THREE.SRGBColorSpace
+
+gravesColorTexture.repeat.set(2,1)
+gravesARMTexture.repeat.set(2,1)
+gravesNormalTexture.repeat.set(2,1)
+
+gravesColorTexture.wrapS = THREE.RepeatWrapping
+gravesARMTexture.wrapS = THREE.RepeatWrapping
+gravesNormalTexture.wrapS = THREE.RepeatWrapping
+
+//Door
+const doorColorTexture = textureLoader.load("./door/color.jpg")
+const doorAlphaTexture = textureLoader.load("./door/alpha.jpg")
+const doorAmbientOcclusionlTexture = textureLoader.load("./door/ambientOcclusion.jpg")
+const doorHeightTexture = textureLoader.load("./door/height.jpg")
+const doorNormalTexture = textureLoader.load("./door/normal.jpg")
+const doorMetalnessTexture = textureLoader.load("./door/metalness.jpg")
+const doorRoughnessTexture = textureLoader.load("./door/roughness.jpg")
+
+doorColorTexture.colorSpace = THREE.SRGBColorSpace
+
+
+
+
+
+const walls = new THREE.Mesh(
+    new THREE.BoxGeometry (4, 2.5, 4),
+    new THREE.MeshStandardMaterial({
+        map: wallColorTexture,
+        aoMap: wallARMTexture,
+        roughness: wallARMTexture,
+        metalnessMap: wallARMTexture,
+        normalMap: wallNormalTexture
+    })
+)
+
+
+
 /**
  * House
  */
@@ -28,18 +163,17 @@ const houseSizes = {
 const house = new THREE.Group()
 scene.add(house)
 
-//Walls
-const walls = new THREE.Mesh(
-    new THREE.BoxGeometry(4, 2.5, 4),
-    new THREE.MeshStandardMaterial()
-)
-walls.position.y = 1.25
-house.add(walls)
 
 // Roof
 const roof = new THREE.Mesh(
     new THREE.ConeGeometry(3.5, 1.5, 4),
-    new THREE.MeshStandardMaterial
+    new THREE.MeshStandardMaterial({
+        map: roofColorTexture,
+        aoMap: roofARMTexture,
+        roughness: roofARMTexture,
+        metalnessMap: roofARMTexture,
+        normalMap: roofNormalTexture
+    })
 )
 roof.position.y = 3.25
 roof.rotation.y = 2.35
@@ -47,42 +181,70 @@ house.add(roof)
 
 //Door
 const door = new THREE.Mesh(
-    new THREE.PlaneGeometry( 2.2, 2.2),
-    new THREE.MeshBasicMaterial()
+    new THREE.PlaneGeometry( 2.2, 2.2, 100, 100),
+    new THREE.MeshStandardMaterial({
+        map: doorColorTexture,
+        transparent: true,
+        alphaMap: doorAlphaTexture,
+        aoMap: doorAmbientOcclusionlTexture,
+        displacementMap: doorHeightTexture,
+        displacementScale: 0.15,
+        displacementBias: -0.04,
+        normalMap: doorNormalTexture,
+        metalnessMap: doorMetalnessTexture,
+        roughnessMap: doorRoughnessTexture
+    })
 )
+
 door.position.z = 2 + 0.01
 door.position.y = 1
 house.add(door)
 
 //Bushes
-const bushGeometry = new THREE.SphereGeometry(1, 50, 10)
-const bushMaterial = new THREE.MeshBasicMaterial()
+const bushGeometry = new THREE.SphereGeometry(1, 16, 16)
+const bushMaterial = new THREE.MeshBasicMaterial({
+        color: "#ccffcc", 
+        map: bushColorTexture,
+        aoMap: bushARMTexture,
+        normalMap: bushNormalTexture  
+
+})
 
 const bush1 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush1.scale.set(0.5, 0.5, 0.5)
 bush1.position.set(0.8, 0.2, 2.2)
+bush1.rotation.x = - 0.75
 
 
 const bush2 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush2.scale.set(0.25, 0.25, 0.25)
 bush2.position.set(1.4, 0.1, 2.1)
+bush2.rotation.x = - 0.75
 
 
 const bush3 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush3.scale.set(0.4, 0.4, 0.4)
 bush3.position.set(-0.8, 0.1, 2.2)
+bush3.rotation.x = - 0.75
 
 
 const bush4 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush4.scale.set(0.15, 0.15, 0.15)
 bush4.position.set(-1, 0.05, 2.5)
 house.add(bush1, bush2, bush3,bush4)
+bush4.rotation.x = - 0.75
 
 
 // Graves
 
 const graveGeometry = new THREE.BoxGeometry(0.2, 1, 1)
-const graveMaterial = new THREE.MeshStandardMaterial()
+const graveMaterial = new THREE.MeshStandardMaterial({
+        map: gravesColorTexture,
+        aoMap: gravesARMTexture,
+        roughness: gravesARMTexture,
+        metalnessMap: gravesARMTexture,
+        normalMap: gravesNormalTexture
+})
 
 const graves = new THREE.Group ()
 scene.add(graves)
@@ -109,34 +271,20 @@ for(let i = 0; i < 30; i++){
     graves.add(grave)
 }
 
+walls.position.y = 1.25
+house.add(walls)
 
-
-
-
-
-
-
-
-
-//Floor
-const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry (20, 20),
-    new THREE.MeshStandardMaterial()
-)
-floor.rotation.x = - Math.PI * 0.5
-
-scene.add(floor)
 
 
 /**
  * Lights
  */
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#ffffff', 0.5)
+const ambientLight = new THREE.AmbientLight('#86cdff', 0.275)
 scene.add(ambientLight)
 
 // Directional light
-const directionalLight = new THREE.DirectionalLight('#ffffff', 1.5)
+const directionalLight = new THREE.DirectionalLight('#86cdff', 1)
 directionalLight.position.set(3, 2, -8)
 scene.add(directionalLight)
 
